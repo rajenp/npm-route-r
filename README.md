@@ -1,4 +1,4 @@
-# npm-serve-lite
+# npm-route-r
 Lite HTTP Request routing and serving framework for Node
 
 # Usage

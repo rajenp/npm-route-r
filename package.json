@@ -1,6 +1,6 @@
 {
-  "name": "serve-route",
-  "version": "0.0.3",
+  "name": "route-r",
+  "version": "0.0.1",
   "description": "Lite HTTP Request routing and serving framework",
   "main": "server.js",
   "scripts": {
