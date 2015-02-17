@@ -3,7 +3,7 @@ Lite HTTP Request routing and serving framework for Node
 
 # Usage
 ```js
-var server = require("serve-route").server;
+var server = require("route-r").server;
 
 server.onGet("/something", function(req, res) {
   return {
