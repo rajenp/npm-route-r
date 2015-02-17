@@ -1,0 +1,25 @@
+{
+  "name": "serve-route",
+  "version": "0.0.1",
+  "description": "Lite HTTP Request routing and serving framework",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rpatil26/npm-serve-route.git"
+  },
+  "keywords": [
+    "router",
+    "server",
+    "lite"
+  ],
+  "author": "Rajendra Patil",
+  "bugs": {
+    "url": "https://github.com/rpatil26/npm-serve-route/issues"
+  },
+  "homepage": "https://github.com/rpatil26/npm-serve-route",
+  "license": "MIT"
+}
