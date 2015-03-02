@@ -66,17 +66,20 @@
                 code: code
             };
         },
-        routes = {
-            on: [],
-            get: [],
-            put: [],
-            post: [],
-            "delete": [],
-            options: [],
-            head: [],
-            trace: [],
-            connect: []
+        getDefaultRoutes = function() {
+            return {
+                on: [],
+                get: [],
+                put: [],
+                post: [],
+                "delete": [],
+                options: [],
+                head: [],
+                trace: [],
+                connect: []
+            };
         },
+        routes = getDefaultRoutes(),
         helper = {
             onRequestBody: function(req, callback) {
                 var fullBody = "",
@@ -114,10 +117,14 @@
                         res.end();
                     }
                 }
+            },
+            resetRoutes: function() {
+                routes = getDefaultRoutes();
             }
         },
         server = (function() {
-            var processReq = function(req, res) {
+            var httpServer,
+                processReq = function(req, res) {
                     console.log("%s - \"%s %s HTTP/%s\"",
                         req.connection.remoteAddress,
                         req.method,
@@ -162,6 +169,8 @@
                         list.push(route);
                     }
                 };
+
+
             return {
                 on: function(routePath, callback) {
                     addRoute("on", {
@@ -230,7 +239,13 @@
                     if (!port || typeof port !== "number") {
                         throw new Error("Invalid port number: " + port);
                     }
-                    http.createServer(processReq).listen(port);
+                    httpServer = http.createServer(processReq).listen(port);
+                },
+                stop: function(callback) {
+                    if (httpServer) {
+                        httpServer.close(callback);
+                    }
+                    helper.resetRoutes();
                 }
             };
         }());
