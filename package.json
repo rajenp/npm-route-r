@@ -1,6 +1,6 @@
 {
   "name": "route-r",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Lite HTTP Request routing and serving framework",
   "main": "bin/server.min.js",
   "scripts": {
