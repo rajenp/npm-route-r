@@ -2,7 +2,7 @@ var suite = require('./onGetSuite.js').suite;
 
 describe(suite.describe, function() {
 
-    var SERVER_FILE_PATH = "../../bin/server.min.js",
+    var SERVER_FILE_PATH = "../../src/server.js",
         request = require('request'),
         tests = suite.tests || [],
         expectation,
@@ -38,17 +38,22 @@ describe(suite.describe, function() {
                     expected = expectation.headers[expectedName];
                     actual = response.headers[expectedName] || response.headers[expectedName.toLowerCase()];
                     expect(actual).toBe(expected);
+
                 });
 
                 //Test data
-                expectation.data = expectation.data || {};
-                response.body = JSON.parse(response.body || "{}");
-                Object.keys(expectation.data).forEach(function(expectedName) {
-                    expected = expectation.data[expectedName];
-                    actual = response.body[expectedName];
-                    expect(actual).toBe(expected);
-                });
-
+                if (expectation.data) {
+                    if (response.headers["content-type"] === "application/json") {
+                        response.body = JSON.parse(response.body || "{}");
+                        Object.keys(expectation.data).forEach(function(expectedName) {
+                            expected = expectation.data[expectedName];
+                            actual = response.body[expectedName];
+                            expect(actual).toBe(expected);
+                        });
+                    } else {
+                        expect(response.body).toBe(expectation.data);
+                    }
+                }
                 server.stop();
                 done();
             }, 250);

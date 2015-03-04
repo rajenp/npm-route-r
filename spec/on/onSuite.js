@@ -2,7 +2,7 @@
  * Test suite data used by Spec, exported as suite
  */
 exports.suite = {
-    describe: "onGet Test Suite",
+    describe: "`on` Test Suite",
     port: 9898,
     tests: [{
         describe: "should process GET request",
@@ -84,7 +84,7 @@ exports.suite = {
             statusCode: 404
         }
     }, {
-        describe: "should reject POST request with 404",
+        describe: "should not reject POST request",
         routes: [{
             path: "/user/add",
             handler: function() {
@@ -100,7 +100,10 @@ exports.suite = {
             url: "http://localhost:9898/user/add"
         },
         expectation: {
-            statusCode: 404
+            statusCode: 200,
+            data: {
+                "User": "added"
+            }
         }
     }, {
         describe: "should reject unmatched path with 404",

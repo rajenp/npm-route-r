@@ -83,14 +83,19 @@
         helper = {
             onRequestBody: function(req, callback) {
                 var fullBody = "",
-                    data;
+                    data,
+                    contentType;
                 req.on("data", function(chunk) {
                     fullBody += chunk.toString();
 
                 });
                 req.on("end", function() {
-                    data = fullBody && JSON.parse(fullBody);
-
+                    contentType = req.headers["content-type"] || req.headers["Content-Type"];
+                    if (fullBody && contentType === "application/json") {
+                        data = JSON.parse(fullBody);
+                    } else {
+                        data = fullBody;
+                    }
                     callback({
                         data: data
                     });
@@ -102,9 +107,15 @@
             },
             sendResult: function(res, result) {
                 result = result || resultWithCode(404);
+                result.code = result.code || 200; // Assume OK 
                 result.message = result.message || http.STATUS_CODES[result.code];
                 if (result.data && typeof result.data === "object") {
                     res.setHeader("Content-Type", "application/json");
+                }
+                if (result.downloadAs) {
+                    result.data = result.data.toString();
+                    res.setHeader("Content-Type", "application/octet-stream");
+                    res.setHeader("Content-Disposition", "attachment; filename=\"" + result.downloadAs + "\"");
                 }
                 res.writeHead(result.code, result.message, result.headers || {});
                 if (!result.data) {
@@ -144,6 +155,7 @@
                         };
                     if (definedRoutes.length < 1) { //if method specific routes are not defined, fallback
                         definedRoutes = routes.on;
+                        length = definedRoutes.length;
                     }
                     //start matching routes in order and start serving, first matching route will serve the request
                     while (index < length) {

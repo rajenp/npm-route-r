@@ -1,4 +1,4 @@
-var suite = require('./onPostSuite.js').suite;
+var suite = require('./onOptionsSuite.js').suite;
 
 describe(suite.describe, function() {
 
@@ -17,13 +17,14 @@ describe(suite.describe, function() {
             //Setup defined routes 
             test.routes = test.routes || [];
             test.routes.forEach(function(route) {
-                server.onPost(route.path, route.handler);
+                server.onOptions(route.path, route.handler);
             });
 
             server.start(suite.port);
 
             //make a request and expect a result
-            request[test.request.method || "post"]({
+            request({
+                method: "OPTIONS",
                 url: test.request.url,
                 headers: test.request.headers,
                 body: test.request.body
@@ -38,17 +39,22 @@ describe(suite.describe, function() {
                     expected = expectation.headers[expectedName];
                     actual = response.headers[expectedName] || response.headers[expectedName.toLowerCase()];
                     expect(actual).toBe(expected);
+
                 });
 
                 //Test data
-                expectation.data = expectation.data || {};
-                response.body = JSON.parse(response.body || "{}");
-                Object.keys(expectation.data).forEach(function(expectedName) {
-                    expected = expectation.data[expectedName];
-                    actual = response.body[expectedName];
-                    expect(actual).toBe(expected);
-                });
-
+                if (expectation.data) {
+                    if (response.headers["content-type"] === "application/json") {
+                        response.body = JSON.parse(response.body || "{}");
+                        Object.keys(expectation.data).forEach(function(expectedName) {
+                            expected = expectation.data[expectedName];
+                            actual = response.body[expectedName];
+                            expect(actual).toBe(expected);
+                        });
+                    } else {
+                        expect(response.body).toBe(expectation.data);
+                    }
+                }
                 server.stop();
                 done();
             }, 250);

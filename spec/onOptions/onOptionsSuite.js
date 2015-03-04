@@ -2,10 +2,10 @@
  * Test suite data used by Spec, exported as suite
  */
 exports.suite = {
-    describe: "onGet Test Suite",
+    describe: "onOptions Test Suite",
     port: 9898,
     tests: [{
-        describe: "should process GET request",
+        describe: "should process OPTIONS request",
         routes: [{
             path: "/test/path",
             handler: function() {}
@@ -84,7 +84,7 @@ exports.suite = {
             statusCode: 404
         }
     }, {
-        describe: "should reject POST request with 404",
+        describe: "should not reject POST request",
         routes: [{
             path: "/user/add",
             handler: function() {
@@ -100,7 +100,10 @@ exports.suite = {
             url: "http://localhost:9898/user/add"
         },
         expectation: {
-            statusCode: 404
+            statusCode: 200,
+            data: {
+                "User": "added"
+            }
         }
     }, {
         describe: "should reject unmatched path with 404",
@@ -304,28 +307,6 @@ exports.suite = {
             statusCode: 200,
             data: {
                 isUserSearch: true
-            }
-        }
-    }, {
-        describe: "should send the file download",
-        routes: [{
-            path: "/users/download",
-            handler: function(req) {
-                return {
-                    data: "a,b,c",
-                    downloadAs: "users.txt"
-                };
-            }
-        }],
-        request: {
-            url: "http://localhost:9898/users/download"
-        },
-        expectation: {
-            statusCode: 200,
-            data: "a,b,c",
-            headers: {
-                "Content-Type": "application/octet-stream",
-                "Content-Disposition": "attachment; filename=\"users.txt\""
             }
         }
     }]

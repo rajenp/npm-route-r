@@ -2,10 +2,10 @@
  * Test suite data used by Spec, exported as suite
  */
 exports.suite = {
-    describe: "onGet Test Suite",
+    describe: "onDelete Test Suite",
     port: 9898,
     tests: [{
-        describe: "should process GET request",
+        describe: "should process DELETE request",
         routes: [{
             path: "/test/path",
             handler: function() {}
@@ -58,7 +58,7 @@ exports.suite = {
             handler: function() {
                 return {
                     data: {
-                        "UserName": "rpatil26"
+                        "deleted": "true"
                     }
                 };
             }
@@ -72,7 +72,7 @@ exports.suite = {
                 "Content-Type": "application/json"
             },
             data: {
-                "UserName": "rpatil26"
+                "deleted": "true"
             }
         }
     }, {
@@ -84,7 +84,7 @@ exports.suite = {
             statusCode: 404
         }
     }, {
-        describe: "should reject POST request with 404",
+        describe: "should reject POST request",
         routes: [{
             path: "/user/add",
             handler: function() {
@@ -97,6 +97,25 @@ exports.suite = {
         }],
         request: {
             method: "post",
+            url: "http://localhost:9898/user/add"
+        },
+        expectation: {
+            statusCode: 404
+        }
+    }, {
+        describe: "should reject GET request",
+        routes: [{
+            path: "/user/add",
+            handler: function() {
+                return {
+                    data: {
+                        "User": "added"
+                    }
+                };
+            }
+        }],
+        request: {
+            method: "get",
             url: "http://localhost:9898/user/add"
         },
         expectation: {
@@ -304,28 +323,6 @@ exports.suite = {
             statusCode: 200,
             data: {
                 isUserSearch: true
-            }
-        }
-    }, {
-        describe: "should send the file download",
-        routes: [{
-            path: "/users/download",
-            handler: function(req) {
-                return {
-                    data: "a,b,c",
-                    downloadAs: "users.txt"
-                };
-            }
-        }],
-        request: {
-            url: "http://localhost:9898/users/download"
-        },
-        expectation: {
-            statusCode: 200,
-            data: "a,b,c",
-            headers: {
-                "Content-Type": "application/octet-stream",
-                "Content-Disposition": "attachment; filename=\"users.txt\""
             }
         }
     }]

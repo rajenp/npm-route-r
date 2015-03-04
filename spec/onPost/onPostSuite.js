@@ -1,5 +1,5 @@
 /**
- * Test uite data used by Spec, exported as suite
+ * Test suite data used by Spec, exported as suite
  */
 exports.suite = {
     describe: "onPost Test Suite",
@@ -21,9 +21,7 @@ exports.suite = {
         routes: [{
             path: "/test/path",
             handler: function() {
-                return {
-                    code: 200
-                };
+                return { /*code: 200*/ };
             }
         }],
         request: {
@@ -40,8 +38,7 @@ exports.suite = {
                 return {
                     headers: {
                         "X-Served-By": "Route-R"
-                    },
-                    code: 200
+                    }
                 };
             }
         }],
@@ -62,8 +59,7 @@ exports.suite = {
                 return {
                     data: {
                         "UserName": "rpatil26"
-                    },
-                    code: 200
+                    }
                 };
             }
         }],
@@ -95,8 +91,7 @@ exports.suite = {
                 return {
                     data: {
                         "User": "added"
-                    },
-                    code: 200
+                    }
                 };
             }
         }],
@@ -115,8 +110,7 @@ exports.suite = {
                 return {
                     data: {
                         users: []
-                    },
-                    code: 200
+                    }
                 };
             }
         }],
@@ -134,8 +128,7 @@ exports.suite = {
                 return {
                     data: {
                         users: []
-                    },
-                    code: 200
+                    }
                 };
             }
         }],
@@ -153,8 +146,7 @@ exports.suite = {
                 return {
                     data: {
                         users: []
-                    },
-                    code: 200
+                    }
                 };
             }
         }],
@@ -172,8 +164,7 @@ exports.suite = {
                 return {
                     data: {
                         user: req.params.user
-                    },
-                    code: 200
+                    }
                 };
             }
         }],
@@ -195,8 +186,7 @@ exports.suite = {
                     data: {
                         user: req.params.user,
                         country: req.params.country
-                    },
-                    code: 200
+                    }
                 };
             }
         }],
@@ -219,8 +209,7 @@ exports.suite = {
                     data: {
                         user: req.params.user,
                         country: req.params.country
-                    },
-                    code: 200
+                    }
                 };
             }
         }],
@@ -232,6 +221,124 @@ exports.suite = {
             data: {
                 user: "rpatil26",
                 country: "in"
+            }
+        }
+    }, {
+        describe: "should pick correct route when multiple routes are defined",
+        routes: [{
+            path: "/users/search",
+            handler: function(req) {
+                return {
+                    data: {
+                        isUserSearch: true
+                    }
+                };
+            }
+        }, {
+            path: "/customer/search",
+            handler: function(req) {
+                return {
+                    data: {
+                        isCustomerSearch: true
+                    }
+                };
+            }
+        }],
+        request: {
+            url: "http://localhost:9898/customer/search"
+        },
+        expectation: {
+            statusCode: 200,
+            data: {
+                isCustomerSearch: true
+            }
+        }
+    }, {
+        describe: "should pick correct route when multiple routes are defined",
+        routes: [{
+            path: "/users/search",
+            handler: function(req) {
+                return {
+                    data: {
+                        isUserSearch: true
+                    }
+                };
+            }
+        }, {
+            path: "/customer/search",
+            handler: function(req) {
+                return {
+                    data: {
+                        isCustomerSearch: true
+                    }
+                };
+            }
+        }],
+        request: {
+            url: "http://localhost:9898/users/search"
+        },
+        expectation: {
+            statusCode: 200,
+            data: {
+                isUserSearch: true
+            }
+        }
+    }, {
+        describe: "should be able to extract JSON body from the POST request",
+        routes: [{
+            path: "/user/add",
+            handler: function(req) {
+                return {
+                    data: {
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName
+                    }
+                };
+            }
+        }],
+        request: {
+            url: "http://localhost:9898/user/add",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: "{\"firstName\":\"Rajendra\", \"lastName\": \"Patil\"}"
+        },
+        expectation: {
+            statusCode: 200,
+            data: {
+                firstName: "Rajendra",
+                lastName: "Patil"
+            }
+        }
+    }, {
+        describe: "should be able to extract any (XML) payload from the POST request",
+        routes: [{
+            path: "/user/add",
+            handler: function(req) {
+                return {
+                    headers: {
+                        "Content-Type": "text/xml"
+                    },
+                    data: {
+                        xml: req.body
+                    }
+                };
+            }
+        }],
+        request: {
+            url: "http://localhost:9898/user/add",
+            headers: {
+                "Content-Type": "text/xml"
+            },
+            body: "<user firstName=\"Rajendra\" lastName=\"Patil\"/>"
+        },
+        expectation: {
+            statusCode: 200,
+            headers: {
+                "Content-Type": "text/xml"
+            },
+            data: {
+                xml: "<user firstName=\"Rajendra\" lastName=\"Patil\"/>"
             }
         }
     }]
