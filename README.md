@@ -54,7 +54,7 @@ server.onGet("/users/list", function(req, res) {
 });
 //...
 ```
-** Return custom error code and message **
+**Return custom error code and message**
 ```js
 //...
 server.onGet("/users/list", function(req, res) { 
@@ -66,7 +66,7 @@ server.onGet("/users/list", function(req, res) {
 });
 //...
 ```
-** Force file download **
+**Force file download**
 ```js
 //...
 server.onGet("/users/list/download", function(req, res) { 
