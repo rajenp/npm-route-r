@@ -328,5 +328,33 @@ exports.suite = {
                 "Content-Disposition": "attachment; filename=\"users.txt\""
             }
         }
+    }, {
+        describe: "should redirect to new location",
+        routes: [{
+            path: "/users/home",
+            handler: function(req) {
+                return {
+                    redirectTo: "/users/newHome"
+                };
+            }
+        }, {
+            path: "/users/newHome",
+            handler: function(req) {
+                return {
+                    data: {
+                        redirected: true
+                    }
+                };
+            }
+        }],
+        request: {
+            url: "http://localhost:9898/users/home"
+        },
+        expectation: {
+            statusCode: 200,
+            data: {
+                redirected: true
+            }
+        }
     }]
 };

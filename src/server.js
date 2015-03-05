@@ -108,7 +108,6 @@
             sendResult: function(res, result) {
                 result = result || resultWithCode(404);
                 result.code = result.code || 200; // Assume OK 
-                result.message = result.message || http.STATUS_CODES[result.code];
                 if (result.data && typeof result.data === "object") {
                     res.setHeader("Content-Type", "application/json");
                 }
@@ -117,6 +116,14 @@
                     res.setHeader("Content-Type", "application/octet-stream");
                     res.setHeader("Content-Disposition", "attachment; filename=\"" + result.downloadAs + "\"");
                 }
+                if (result.redirectTo) {
+                    result.code = 302;
+                    res.setHeader("Location", result.redirectTo);
+                }
+                if (result.notModified) {
+                    result.code = 304;
+                }
+                result.message = result.message || http.STATUS_CODES[result.code];
                 res.writeHead(result.code, result.message, result.headers || {});
                 if (!result.data) {
                     res.end();
