@@ -17,6 +17,42 @@ exports.suite = {
             statusCode: 501
         }
     }, {
+        describe: "route '/test/path/' should not process request with /test/path",
+        routes: [{
+            path: "/test/path/",
+            handler: function() {}
+        }],
+        request: {
+            url: "http://localhost:9898/test/path"
+        },
+        expectation: {
+            statusCode: 404
+        }
+    }, {
+        describe: "route '/test/path/?' should process request with /test/path",
+        routes: [{
+            path: "/test/path/?",
+            handler: function() {}
+        }],
+        request: {
+            url: "http://localhost:9898/test/path"
+        },
+        expectation: {
+            statusCode: 501
+        }
+    }, {
+        describe: "route '/test/path/?' should also process request with /test/path/",
+        routes: [{
+            path: "/test/path/?",
+            handler: function() {}
+        }],
+        request: {
+            url: "http://localhost:9898/test/path/"
+        },
+        expectation: {
+            statusCode: 501
+        }
+    }, {
         describe: "should return correct response statusCode",
         routes: [{
             path: "/test/path",
